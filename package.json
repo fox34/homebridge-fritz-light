@@ -1,22 +1,35 @@
 {
-  "name": "homebridge-plugin-name",
-  "displayName": "Plugin Name",
+  "name": "homebridge-fritz-redux",
+  "displayName": "Homebridge FRITZ! Redux",
   "type": "module",
   "version": "1.0.0",
-  "private": true,
-  "description": "A short description about what your plugin does.",
-  "author": "Your Name",
+  "description": "Homebridge integration for the FRITZ! ecosystem",
+  "author": "fox34",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/USERNAME/GITHUB_PROJECT_NAME#readme",
+  "homepage": "https://github.com/fox34/homebridge-fritz-redux#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/USERNAME/GITHUB_PROJECT_NAME.git"
+    "url": "https://github.com/fox34/homebridge-fritz-redux.git"
   },
   "bugs": {
-    "url": "https://github.com/USERNAME/GITHUB_PROJECT_NAME/issues"
+    "url": "https://github.com/fox34/homebridge-fritz-redux/issues"
   },
+  "funding": [
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/stefanovanmansiere"
+    }
+  ],
   "keywords": [
-    "homebridge-plugin"
+    "fritz",
+    "fritzbox",
+    "homebridge-plugin",
+    "plugin",
+    "presence",
+    "dect",
+    "smarthome",
+    "tr064",
+    "avm"
   ],
   "main": "dist/index.js",
   "engines": {
