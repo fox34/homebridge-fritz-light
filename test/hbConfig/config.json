@@ -7,7 +7,7 @@
   },
   "description": "HomeBridge HTTP Status Control",
   "plugins": [
-    "homebridge-plugin-name",
+    "homebridge-fritz-redux",
     "homebridge-config-ui-x"
   ],
   "platforms": [
@@ -24,7 +24,7 @@
     },
     {
       "name": "homebridge-plugin-name",
-      "platform": "ExampleHomebridgePlugin"
+      "platform": "FritzRedux"
     }
   ],
   "accessories": []
