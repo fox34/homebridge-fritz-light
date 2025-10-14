@@ -23,10 +23,10 @@ This plugin allows control of various devices in the **FRITZ!** ecosystem:
 |-------------------------------------------|-----------------------------------------------------------------------------------------------------------|
 | **FRITZ!Box**, FRITZ!Repeater             | - Toggle guest WLAN                                                                                       |
 | **Buttons**<br>(e.g. FRITZ!DECT 400, 440) | - Temperature and humidity reporting<br>- **No** support for button presses (cannot be detected reliably) |
-| **Outlets**<br>(e.g. FRITZ!DECT 200)      | - Toggle on/off<br>- Temperature reporting                                                                |
 | **Lights**<br>(e.g. FRITZ!DECT 500)       | - Toggle on/off<br>- Change brightness / color<br>- Support for adaptive lighting                         |
-| **Thermostats**<br>(e.g. FRITZ!DECT 301)  | - Toggle on/off<br>- Change target temperature<br>- Temperature reporting                                 |
+| **Outlets**<br>(e.g. FRITZ!DECT 200)      | - Toggle on/off<br>- Temperature reporting                                                                |
 | **Sensors**<br>(e.g. FRITZ!DECT 350)      | - Window state reporting                                                                                  |
+| **Thermostats**<br>(e.g. FRITZ!DECT 301)  | - Toggle on/off<br>- Change target temperature<br>- Temperature reporting                                 |
 
 
 ## Configuration
