@@ -28,6 +28,18 @@
         "type": "string",
         "description": "Password to use for connecting to the FRITZ!Box"
       },
+      "exposeTemplates": {
+        "title": "Expose smart home templates",
+        "type": "boolean",
+        "description": "Expose smart home templates as simple switches",
+        "default": true
+      },
+      "templatePrefix": {
+        "title": "Prefix for template devices",
+        "type": "string",
+        "description": "Prefix for device template names",
+        "default": "Template:"
+      },
       "ignoredAccessories": {
         "type": "array",
         "items": {

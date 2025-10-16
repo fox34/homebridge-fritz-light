@@ -47,7 +47,7 @@ export class FritzRedux implements DynamicPlatformPlugin {
      */
     async discoverDevices() {
         this.log.info('Discovering FRITZ! devices…');
-        const devices = await this.fritzbox.smartHome.getDevices();
+        const devices = await this.fritzbox.smartHome.getDevices(this.config);
 
         // loop over the discovered devices and register each one if it has not already been registered
         for (const device of devices) {
@@ -99,7 +99,7 @@ export class FritzRedux implements DynamicPlatformPlugin {
 
         // Periodically update device info: every minute
         setInterval(async () => {
-            await this.fritzbox.smartHome.getDevices();
+            await this.fritzbox.smartHome.getDevices(this.config);
         }, 60 * 1000);
     }
 }

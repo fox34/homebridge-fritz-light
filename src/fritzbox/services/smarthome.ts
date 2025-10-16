@@ -1,22 +1,26 @@
 import type { FritzBox } from '../fritzbox.js';
 import { XMLClient } from '../xml.client.js';
+import { Template } from '../accessories/template.js';
 import { Thermostat } from '../accessories/thermostat.js';
 import { HomebridgeAccessory } from 'homebridge-lib';
 import type { PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../../platform.js';
+import { PlatformConfig } from 'homebridge';
 
 class SmartHome {
-    private devices: Map<string, Device & Thermostat> = new Map();
+    private devices: Map<string, Device & (Template | Thermostat)> = new Map();
 
     /**
      * @link https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/deviceinfoSCPD.pdf
      */
     constructor(private fritzbox: FritzBox) {}
 
-    public async getDevices(): Promise<(Device & Thermostat)[]> {
+    public async getDevices(config: PlatformConfig): Promise<(Device & (Template | Thermostat))[]> {
         await this.fritzbox.init();
         const sid = await this.fritzbox.getSid();
-        const url = `${this.fritzbox.url.protocol}//${this.fritzbox.url.hostname}/webservices/homeautoswitch.lua?switchcmd=getdevicelistinfos&sid=${sid}`;
+
+        // Devices
+        let url = `${this.fritzbox.url.protocol}//${this.fritzbox.url.hostname}/webservices/homeautoswitch.lua?switchcmd=getdevicelistinfos&sid=${sid}`;
         const deviceResponse = await new XMLClient().requestXML<DeviceResponse>(url);
 
         // Just a single device
@@ -24,15 +28,50 @@ class SmartHome {
             deviceResponse.devicelist.device = [deviceResponse.devicelist.device];
         }
 
-        return deviceResponse.devicelist.device
-            .filter(device => this.getDeviceType(device) !== undefined)
-            .map(device => this.getDeviceFromApi(device));
+        let templateResponse: TemplateResponse;
+        if (config.exposeTemplates) {
+
+            // Templates
+            url = `${this.fritzbox.url.protocol}//${this.fritzbox.url.hostname}/webservices/homeautoswitch.lua?switchcmd=gettemplatelistinfos&sid=${sid}`;
+            templateResponse = await new XMLClient().requestXML<TemplateResponse>(url);
+
+            // Just a single template
+            if (!Array.isArray(templateResponse.templatelist.template)) {
+                templateResponse.templatelist.template = [templateResponse.templatelist.template];
+            }
+        } else {
+            templateResponse = { 'templatelist': { 'template': [], '@_version': '0' } };
+        }
+
+        return [
+            ...deviceResponse.devicelist.device
+                .filter(device => this.getDeviceType(device) !== undefined)
+                .map(device => this.getDeviceFromApi(device)),
+
+            ...templateResponse.templatelist.template
+                .map(template => this.getTemplate(template)),
+        ];
     }
 
     private getDeviceFromApi(device: ApiDevice): Device & Thermostat {
         // Nothing else implemented yet
         //switch (this.getDeviceType(device)) { ... }
         return this.getThermostat(device);
+    }
+
+    private getTemplate(apiTemplate: ApiTemplate): Template {
+        let template: Template;
+        if (this.devices.has(apiTemplate['@_identifier'])) {
+            template = <Template>this.devices.get(apiTemplate['@_identifier']);
+        } else {
+            template = new Template(
+                this.fritzbox,
+                apiTemplate['@_identifier'],
+                apiTemplate.name,
+            );
+            this.devices.set(template.ain, template);
+        }
+        return template;
     }
 
     private getThermostat(device: ApiDevice): Thermostat {
@@ -104,7 +143,7 @@ enum DeviceType {
     Thermostat = 'thermostat',
 }
 
-// XML/AHA-API
+// XML/AHA-API: Devices
 interface DeviceResponse {
     devicelist: DeviceList;
 }
@@ -186,6 +225,36 @@ interface ApiDevice {
     };
 }
 
+// XML/AHA-API: Templates
+interface TemplateResponse {
+    templatelist: Templatelist;
+}
+interface Templatelist {
+    template: ApiTemplate[];
+    '@_version': string;
+}
+interface ApiTemplate {
+    '@_identifier': string;
+    '@_id': string;
+    '@_functionbitmask': number;
+    '@_autocreate': string;
+    '@_applymask': string;
+    name: string;
+    metadata: string;
+    devices: {
+        device: ApiTemplateDevice[];
+    };
+    triggers: string;
+    sub_templates: string;
+    applymask: {
+        hkr_summer: boolean;
+        hkr_holidays: boolean;
+        hkr_time_table: boolean;
+    }
+}
+interface ApiTemplateDevice {
+    '@_identifier': string;
+}
 
 // Homebridge device structure
 interface Device {
