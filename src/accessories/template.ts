@@ -2,6 +2,7 @@ import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../platform.js';
 import { Template as FritzTemplate } from '../fritzbox/accessories/template.js';
 import { HomebridgeAccessory } from 'homebridge-lib';
+import { sleep } from '../utils/utils.js';
 
 export class Template implements HomebridgeAccessory {
     constructor(platform: FritzRedux, accessory: PlatformAccessory, device: FritzTemplate) {
@@ -16,7 +17,7 @@ export class Template implements HomebridgeAccessory {
 
         // Create switch service
         const service = accessory.getService(platform.Service.Switch) || accessory.addService(platform.Service.Switch);
-        service.setCharacteristic(platform.Characteristic.Name, `${platform.config.templatePrefix} ${device.name}`);
+        service.setCharacteristic(platform.Characteristic.Name, `${platform.config.templatePrefix}${device.name}`);
         service.getCharacteristic(platform.Characteristic.On)
             .onGet(() => 0)  // Template state cannot be queried
             .onSet(async (value: CharacteristicValue) => {
@@ -25,6 +26,8 @@ export class Template implements HomebridgeAccessory {
                 }
                 platform.log.info(`Activating template '${device.name}'`);
                 await device.activate();
+                await sleep(1000);
+                service.setCharacteristic(platform.Characteristic.On, 0);
             })
             .updateValue(0)
         ;

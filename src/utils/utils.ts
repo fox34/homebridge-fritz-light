@@ -9,3 +9,5 @@ export const objectsEqualShallow = (obj1: object, obj2: object) => {
 
     return (Object.keys(obj1) as (keyof typeof obj1)[]).every((key) => (Object.prototype.hasOwnProperty.call(obj2, key) && obj1[key] === obj2[key]));
 };
+
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

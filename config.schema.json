@@ -38,7 +38,7 @@
         "title": "Prefix for template devices",
         "type": "string",
         "description": "Prefix for device template names",
-        "default": "Template:"
+        "default": "Template - "
       },
       "ignoredAccessories": {
         "type": "array",
