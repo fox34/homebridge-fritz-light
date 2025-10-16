@@ -1,18 +1,10 @@
-import type { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../platform.js';
 import { Thermostat as FritzThermostat } from '../fritzbox/accessories/thermostat.js';
 import { HomebridgeAccessory } from 'homebridge-lib';
 
 export class Thermostat implements HomebridgeAccessory {
-    private thermostatService: Service;
-    private batteryService: Service;
-
-    constructor(
-        private readonly platform: FritzRedux,
-        private readonly accessory: PlatformAccessory,
-        private readonly device: FritzThermostat,
-    ) {
-        //const device: FritzThermostat = <FritzThermostat>accessory.context.device;
+    constructor(platform: FritzRedux, accessory: PlatformAccessory, device: FritzThermostat) {
 
         // Set basic accessory information
         accessory.getService(platform.Service.AccessoryInformation)!
@@ -23,13 +15,13 @@ export class Thermostat implements HomebridgeAccessory {
         ;
 
         // Create thermostat service
-        this.thermostatService = accessory.getService(platform.Service.Thermostat) || accessory.addService(platform.Service.Thermostat);
+        const thermostatService = accessory.getService(platform.Service.Thermostat) || accessory.addService(platform.Service.Thermostat);
 
         // Set the service name, this is what is displayed as the default name on the Home app
-        this.thermostatService.setCharacteristic(platform.Characteristic.Name, device.name);
+        thermostatService.setCharacteristic(platform.Characteristic.Name, device.name);
 
         // Implement required characteristics
-        this.thermostatService.getCharacteristic(platform.Characteristic.CurrentHeatingCoolingState)
+        thermostatService.getCharacteristic(platform.Characteristic.CurrentHeatingCoolingState)
             .setProps({
                 maxValue: 1,
                 minValue: 0,
@@ -39,7 +31,7 @@ export class Thermostat implements HomebridgeAccessory {
             .updateValue(device.heatingCoolingState)
         ;
 
-        this.thermostatService.getCharacteristic(platform.Characteristic.TargetHeatingCoolingState)
+        thermostatService.getCharacteristic(platform.Characteristic.TargetHeatingCoolingState)
             .setProps({
                 maxValue: 1,
                 minValue: 0,
@@ -47,13 +39,13 @@ export class Thermostat implements HomebridgeAccessory {
             })
             .onGet(() => device.heatingCoolingState)
             .onSet(async (value: CharacteristicValue) => {
-                this.platform.log.info(`Setting target state for ${device.name} to ${value}`);
+                platform.log.info(`Setting target state for ${device.name} to ${value}`);
                 await device.setHeatingCoolingState(<number>value);
             })
             .updateValue(device.heatingCoolingState)
         ;
 
-        this.thermostatService.getCharacteristic(platform.Characteristic.CurrentTemperature)
+        thermostatService.getCharacteristic(platform.Characteristic.CurrentTemperature)
             .setProps({
                 minValue: 0,
                 maxValue: 60,
@@ -63,7 +55,7 @@ export class Thermostat implements HomebridgeAccessory {
             .updateValue(device.currentTemperature)
         ;
 
-        this.thermostatService.getCharacteristic(platform.Characteristic.TargetTemperature)
+        thermostatService.getCharacteristic(platform.Characteristic.TargetTemperature)
             .setProps({
                 minValue: 8,
                 maxValue: 28,
@@ -71,30 +63,23 @@ export class Thermostat implements HomebridgeAccessory {
             })
             .onGet(() => device.targetTemperature)
             .onSet(async (value: CharacteristicValue) => {
-                this.platform.log.info(`Setting target temperature for ${device.name} to ${value} °C`);
+                platform.log.info(`Setting target temperature for ${device.name} to ${value} °C`);
                 await device.setTargetTemperature(<number>value);
             })
             .updateValue(device.targetTemperature)
         ;
 
-        this.thermostatService.getCharacteristic(platform.Characteristic.TemperatureDisplayUnits)
-            .setProps({
-                minValue: 0,
-                maxValue: 0,
-                validValues: [0], // Celsius
-            })
-            .updateValue(platform.Characteristic.TemperatureDisplayUnits.CELSIUS)
-        ;
+        thermostatService.setCharacteristic(platform.Characteristic.TemperatureDisplayUnits, platform.Characteristic.TemperatureDisplayUnits.CELSIUS);
 
         // Create battery service
-        this.batteryService = accessory.getService(platform.Service.Battery) || accessory.addService(platform.Service.Battery);
+        const batteryService = accessory.getService(platform.Service.Battery) || accessory.addService(platform.Service.Battery);
 
-        this.batteryService.getCharacteristic(platform.Characteristic.StatusLowBattery)
+        batteryService.getCharacteristic(platform.Characteristic.StatusLowBattery)
             .onGet(() => device.batteryStatusLow)
             .updateValue(device.batteryStatusLow)
         ;
 
-        this.batteryService.getCharacteristic(platform.Characteristic.BatteryLevel)
+        batteryService.getCharacteristic(platform.Characteristic.BatteryLevel)
             .onGet(() => device.batteryLevel)
             .updateValue(device.batteryLevel)
         ;

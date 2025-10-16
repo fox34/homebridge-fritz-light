@@ -37,7 +37,7 @@ class SmartHome {
 
     private getThermostat(device: ApiDevice): Thermostat {
         if (!device.hkr) {
-            throw new Error('Missing properties');
+            throw new Error(`Missing property 'hkr' for thermostat with identifier ${device['@_identifier']}`);
         }
 
         const state = {
