@@ -23,7 +23,7 @@ export class Template implements HomebridgeAccessory {
                 if (!value) {
                     return;
                 }
-                platform.log.info(`Enabling template ${device.name}`);
+                platform.log.info(`Activating template '${device.name}'`);
                 await device.activate();
             })
             .updateValue(0)

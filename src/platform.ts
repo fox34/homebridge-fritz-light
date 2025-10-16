@@ -65,21 +65,15 @@ export class FritzRedux implements DynamicPlatformPlugin {
             if (existingAccessory) {
                 this.log.info('Restoring accessory from cache:', existingAccessory.displayName);
 
-                //existingAccessory.context.device = device;
+                existingAccessory.displayName = device.name;
                 this.api.updatePlatformAccessories([existingAccessory]);
-
-                // equals: new Thermostat(this, existingAccessory);
                 device.createHomebridgeAccessoryHandler(this, existingAccessory);
 
             } else {
                 this.log.info('Adding new accessory:', device.name);
 
                 const accessory = new this.api.platformAccessory(device.name, uuid);
-                //accessory.context.device = device;
-
-                // equals: new Thermostat(this, existingAccessory);
                 device.createHomebridgeAccessoryHandler(this, accessory);
-
                 this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
             }
 
