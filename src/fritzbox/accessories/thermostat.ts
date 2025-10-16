@@ -58,7 +58,10 @@ export class Thermostat implements Device {
     }
 
     get targetTemperature(): number {
-        return this._state.targetTemperature;
+        return (this._state.targetTemperature < 253)
+            ? this._state.targetTemperature
+            : this.previousTemperature
+        ;
     }
 
     async setTargetTemperature(targetTemperature: number) {
@@ -68,7 +71,9 @@ export class Thermostat implements Device {
         ;
         const url = `webservices/homeautoswitch.lua?switchcmd=sethkrtsoll&ain=${this.ain}&param=${param}`;
         await this.fritzbox.getAHA(url);
-        this._state.targetTemperature = targetTemperature;
+        if (targetTemperature < 253) {
+            this._state.targetTemperature = targetTemperature;
+        }
     }
 
     get heatingCoolingState() {

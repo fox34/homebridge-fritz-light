@@ -83,7 +83,9 @@ class SmartHome {
             name: device.name,
             firmwareVersion: device['@_fwversion'],
             currentTemperature: device.hkr.tist / 2,
-            targetTemperature: device.hkr.tsoll / 2,
+            targetTemperature: device.hkr.tsoll >= 253
+                ? device.hkr.tsoll
+                : device.hkr.tsoll / 2,
             batteryLevel: device.battery || 100,
         };
 
