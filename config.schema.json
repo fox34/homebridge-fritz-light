@@ -2,16 +2,40 @@
   "pluginAlias": "FritzRedux",
   "pluginType": "platform",
   "singular": true,
-  "strictValidation": false,
   "schema": {
     "type": "object",
-    "required": ["name"],
-    "additionalProperties": false,
+    "required": ["name", "host", "username", "password"],
     "properties": {
       "name": {
         "title": "Name",
         "type": "string",
-        "default": "FRITZ! Redux"
+        "default": "FRITZ! Redux",
+        "description": "Title of this platform in logged events"
+      },
+      "host": {
+        "title": "Host",
+        "type": "string",
+        "default": "192.168.178.1",
+        "description": "IP address of the FRITZ!Box"
+      },
+      "username": {
+        "title": "Username",
+        "type": "string",
+        "description": "Username to use for connecting to the FRITZ!Box"
+      },
+      "password": {
+        "title": "Password",
+        "type": "string",
+        "description": "Password to use for connecting to the FRITZ!Box"
+      },
+      "ignoredAccessories": {
+        "type": "array",
+        "items": {
+          "title": "Ignore device",
+          "type": "string",
+          "placeholder": "01234 56789",
+          "description": "The AIN/IPEI of the device (displayed in the FRITZ!Box UI, as-is with full spaces)."
+        }
       }
     }
   }
