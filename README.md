@@ -39,7 +39,7 @@ You need access to a FRITZ!Box on your local network.
 ### 1. Enable Application Access
 
 In your FRITZ!Box settings, enable access for local applications:  
-[AVM Help Article → Allow access for applications](https://fritzhelp.avm.de/help/en/FRITZ-Box-4050/avm/024p1/hilfe_netzwerk_freigabe_apps)
+[FRITZ! manual: Allowing Access to the Home Network for Apps and Applications](https://fritzhelp.avm.de/help/en/FRITZ-Box-4050/avm/024p1/hilfe_netzwerk_freigabe_apps)
 
 - ✅ Allow access for applications
 - ✅ Transmit status information via UPnP
@@ -49,7 +49,7 @@ In your FRITZ!Box settings, enable access for local applications:
 ### 2. Create a Dedicated User
 
 Create a FRITZ!Box user account with full permissions for home network access:  
-[AVM Help Article → Create user account](https://fritzhelp.avm.de/help/en/FRITZ-Box-4050/avm/024p1/hilfe_system_userkonto)
+[FRITZ! manual: Configuring FRITZ!Box Users](https://fritzhelp.avm.de/help/en/FRITZ-Box-4050/avm/024p1/hilfe_system_userkonto)
 
 ![User permissions](images/settings-permissions.jpg)
 
@@ -79,10 +79,11 @@ Example configuration:
 
 ## Technical Background
 
-This plugin communicates directly with the FRITZ!Box using AVM’s official local interfaces:
+This plugin communicates directly with the FRITZ!Box using official local interfaces:
 
-- **TR-064 protocol**: Currently only used to authenticate with the FRITZ!Box.
-- **AHA (AVM Home Automation) interface**: Provides access to smart home device lists and features such as thermostats, power outlets, and sensors.
+- **[TR-064 protocol](https://fritz.support/resources/TR-064_First_Steps.pdf)**: Currently only used to authenticate with the FRITZ!Box.
+- **[AVM Home Automation (AHA) HTTP Interface](https://fritz.support/resources/AHA-HTTP-Interface.pdf)**: Provides access to smart home device lists and features such as thermostats, power outlets, and sensors.
+- The newly developed [FRITZ! Smart Home REST API](https://fritz.support/resources/SmarthomeRestApiFRITZOS82.html) is currently not used, since it is not very broadly supported yet (e.g. not by my devices).
 
 All communication happens **locally** within your home network; no data is transmitted to external servers.
 
