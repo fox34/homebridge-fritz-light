@@ -28,16 +28,7 @@ Currently, this plugin supports the following devices and actions within the **F
 
 > Other FRITZ! SmartHome devices (e.g., plugs or lights) are not yet supported.  
 > Contributions are welcome if you wish to extend functionality.
-
-Some examples of possible devices and features are:
-
-| Device                                    | Supported actions                                                                                         |
-|-------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| **FRITZ!Box**, FRITZ!Repeater             | - Toggle guest WLAN                                                                                       |
-| **Buttons**<br>(e.g. FRITZ!DECT 400, 440) | - Temperature and humidity reporting<br>- **No** support for button presses (cannot be detected reliably) |
-| **Lights**<br>(e.g. FRITZ!DECT 500)       | - Toggle on/off<br>- Change brightness / color<br>- Support for adaptive lighting                         |
-| **Outlets**<br>(e.g. FRITZ!DECT 200)      | - Toggle on/off<br>- Temperature reporting                                                                |
-| **Sensors**<br>(e.g. FRITZ!DECT 350)      | - Window state reporting                                                                                  |
+> See below for further information.
 
 ---
 
@@ -104,6 +95,16 @@ As I no longer own other FRITZ! SmartHome devices, I am **not planning further f
 
 However, contributions are very welcome!
 If you wish to extend support for additional FRITZ! devices (e.g., plugs, switches, sensors), please fork the repository and open a pull request.
+
+Some examples of possible devices and features are:
+
+| Device                                    | Supported actions                                                                            |
+|-------------------------------------------|----------------------------------------------------------------------------------------------|
+| **FRITZ!Box**, FRITZ!Repeater             | - Toggle guest WLAN                                                                          |
+| **Buttons**<br>(e.g. FRITZ!DECT 400, 440) | - Temperature and humidity reporting<br>- *Note*: Button presses cannot be detected reliably |
+| **Lights**<br>(e.g. FRITZ!DECT 500)       | - Power toggle<br>- Change brightness / color<br>- Support for adaptive lighting             |
+| **Outlets**<br>(e.g. FRITZ!DECT 200)      | - Power toggle<br>- Temperature reporting                                                    |
+| **Sensors**<br>(e.g. FRITZ!DECT 350)      | - Window state reporting                                                                     |
 
 ---
 
