@@ -1,8 +1,8 @@
-import type { HomebridgeAccessory } from 'fritz-redux';
+import type { HomebridgeAccessory } from 'fritz-light';
 import type { FritzBox } from '../fritzbox.js';
 import { Thermostat as HomebridgeThermostat } from '../../accessories/thermostat.js';
 import type { PlatformAccessory } from 'homebridge';
-import type { FritzRedux } from '../../platform.js';
+import type { FritzLight } from '../../platform.js';
 import { objectsEqualShallow } from '../../utils/utils.js';
 import { FritzAccessory } from '../smarthome.js';
 
@@ -29,7 +29,7 @@ export class Thermostat implements FritzAccessory {
         }
     }
 
-    createHomebridgeAccessoryHandler(platform: FritzRedux, accessory: PlatformAccessory): HomebridgeAccessory {
+    createHomebridgeAccessoryHandler(platform: FritzLight, accessory: PlatformAccessory): HomebridgeAccessory {
         return new HomebridgeThermostat(platform, accessory, this);
     }
 

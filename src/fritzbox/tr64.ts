@@ -1,4 +1,4 @@
-import type { FritzBoxConnectionOptions } from 'fritz-redux';
+import type { FritzBoxConnectionOptions } from 'fritz-light';
 import type { ArgumentElement, ArgumentList, Action, SCPD } from 'fritz-scpd';
 import type { DeviceService, SystemVersion, SpecVersion, TR64Desc, RootDevice } from 'fritz-tr64';
 import xmlBuilder from 'xmlbuilder';

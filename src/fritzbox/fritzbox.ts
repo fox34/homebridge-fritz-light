@@ -1,4 +1,4 @@
-import type { FritzBoxConnectionOptions } from 'fritz-redux';
+import type { FritzBoxConnectionOptions } from 'fritz-light';
 import type { DeviceInfo as SCPDDeviceInfo, SecurityPort, UrlSID } from 'fritz-scpd';
 import type { Device, TR64Desc } from 'fritz-tr64';
 import { Service, TR64 } from './tr64.js';

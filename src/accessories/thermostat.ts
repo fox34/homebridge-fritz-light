@@ -1,10 +1,10 @@
 import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
-import type { FritzRedux } from '../platform.js';
+import type { FritzLight } from '../platform.js';
 import { Thermostat as FritzThermostat } from '../fritzbox/accessories/thermostat.js';
-import { HomebridgeAccessory } from 'fritz-redux';
+import { HomebridgeAccessory } from 'fritz-light';
 
 export class Thermostat implements HomebridgeAccessory {
-    constructor(platform: FritzRedux, accessory: PlatformAccessory, device: FritzThermostat) {
+    constructor(platform: FritzLight, accessory: PlatformAccessory, device: FritzThermostat) {
 
         // Set basic accessory information
         accessory.getService(platform.Service.AccessoryInformation)!

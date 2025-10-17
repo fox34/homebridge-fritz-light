@@ -1,11 +1,11 @@
 import type { DeviceResponse, Device as AHADevice, TemplateResponse, Template as AHATemplate } from 'fritz-aha';
-import { HomebridgeAccessory } from 'fritz-redux';
+import { HomebridgeAccessory } from 'fritz-light';
 import type { FritzBox } from './fritzbox.js';
 import { XMLClient } from './XMLClient.js';
 import { Template } from './accessories/template.js';
 import { Thermostat } from './accessories/thermostat.js';
 import { PlatformAccessory, PlatformConfig } from 'homebridge';
-import { FritzRedux } from '../platform.js';
+import { FritzLight } from '../platform.js';
 
 // Supported accessory types
 enum AccessoryType {
@@ -40,7 +40,7 @@ export interface FritzAccessory {
     manufacturer: string;
     productName: string;
 
-    createHomebridgeAccessoryHandler(platform: FritzRedux, accessory: PlatformAccessory): HomebridgeAccessory;
+    createHomebridgeAccessoryHandler(platform: FritzLight, accessory: PlatformAccessory): HomebridgeAccessory;
 }
 
 export class SmartHome {

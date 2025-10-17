@@ -1,4 +1,4 @@
-declare module 'fritz-redux' {
+declare module 'fritz-light' {
 
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     export interface HomebridgeAccessory {}

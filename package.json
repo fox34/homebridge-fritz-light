@@ -1,18 +1,18 @@
 {
-  "name": "homebridge-fritz-redux",
-  "displayName": "Homebridge FRITZ! Redux",
+  "name": "homebridge-fritz-light",
+  "displayName": "Homebridge FRITZ! Light",
   "type": "module",
   "version": "1.0.0",
   "description": "Homebridge integration for the FRITZ! ecosystem",
   "author": "fox34",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/fox34/homebridge-fritz-redux#readme",
+  "homepage": "https://github.com/fox34/homebridge-fritz-light#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fox34/homebridge-fritz-redux.git"
+    "url": "https://github.com/fox34/homebridge-fritz-light.git"
   },
   "bugs": {
-    "url": "https://github.com/fox34/homebridge-fritz-redux/issues"
+    "url": "https://github.com/fox34/homebridge-fritz-light/issues"
   },
   "funding": [
     {
@@ -24,11 +24,11 @@
     "fritz",
     "fritzbox",
     "homebridge-plugin",
-    "plugin",
-    "presence",
-    "dect",
     "smarthome",
+    "homeautomation",
+    "thermostat",
     "tr064",
+    "tr64",
     "avm"
   ],
   "main": "dist/index.js",

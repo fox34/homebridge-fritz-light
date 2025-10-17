@@ -1,11 +1,11 @@
 import type { API } from 'homebridge';
 
-import { FritzRedux } from './platform.js';
+import { FritzLight } from './platform.js';
 import { PLATFORM_NAME } from './settings.js';
 
 /**
  * This method registers the platform with Homebridge
  */
 export default (api: API) => {
-    api.registerPlatform(PLATFORM_NAME, FritzRedux);
+    api.registerPlatform(PLATFORM_NAME, FritzLight);
 };

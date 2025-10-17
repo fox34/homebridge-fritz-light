@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "FritzRedux",
+  "pluginAlias": "FritzLight",
   "pluginType": "platform",
   "singular": true,
   "schema": {
@@ -9,7 +9,7 @@
       "name": {
         "title": "Name",
         "type": "string",
-        "default": "FRITZ! Redux",
+        "default": "FRITZ! Light",
         "description": "Title of this platform in logged events"
       },
       "host": {

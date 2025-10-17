@@ -1,11 +1,11 @@
 import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
-import type { FritzRedux } from '../platform.js';
+import type { FritzLight } from '../platform.js';
 import { Template as FritzTemplate } from '../fritzbox/accessories/template.js';
-import { HomebridgeAccessory } from 'fritz-redux';
+import { HomebridgeAccessory } from 'fritz-light';
 import { sleep } from '../utils/utils.js';
 
 export class Template implements HomebridgeAccessory {
-    constructor(platform: FritzRedux, accessory: PlatformAccessory, device: FritzTemplate) {
+    constructor(platform: FritzLight, accessory: PlatformAccessory, device: FritzTemplate) {
 
         // Set basic accessory information
         accessory.getService(platform.Service.AccessoryInformation)!

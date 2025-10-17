@@ -1,8 +1,8 @@
-import type { HomebridgeAccessory } from 'fritz-redux';
+import type { HomebridgeAccessory } from 'fritz-light';
 import type { FritzBox } from '../fritzbox.js';
 import { Template as HomebridgeTemplate } from '../../accessories/template.js';
 import type { PlatformAccessory } from 'homebridge';
-import type { FritzRedux } from '../../platform.js';
+import type { FritzLight } from '../../platform.js';
 import { FritzAccessory } from '../smarthome.js';
 
 export class Template implements FritzAccessory {
@@ -16,7 +16,7 @@ export class Template implements FritzAccessory {
     ) {
     }
 
-    createHomebridgeAccessoryHandler(platform: FritzRedux, accessory: PlatformAccessory): HomebridgeAccessory {
+    createHomebridgeAccessoryHandler(platform: FritzLight, accessory: PlatformAccessory): HomebridgeAccessory {
         return new HomebridgeTemplate(platform, accessory, this);
     }
 
