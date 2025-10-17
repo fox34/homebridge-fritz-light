@@ -1,11 +1,11 @@
-import { HomebridgeAccessory } from 'homebridge-lib';
+import type { HomebridgeAccessory } from 'fritz-redux';
 import type { FritzBox } from '../fritzbox.js';
-import { Device } from '../services/smarthome.js';
 import { Template as HomebridgeTemplate } from '../../accessories/template.js';
 import type { PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../../platform.js';
+import { FritzAccessory } from '../smarthome.js';
 
-export class Template implements Device {
+export class Template implements FritzAccessory {
     public manufacturer: string = 'AVM';
     public productName: string = 'Template';
 

@@ -1,10 +1,10 @@
-import { HomebridgeAccessory } from 'homebridge-lib';
+import type { HomebridgeAccessory } from 'fritz-redux';
 import type { FritzBox } from '../fritzbox.js';
-import { Device } from '../services/smarthome.js';
 import { Thermostat as HomebridgeThermostat } from '../../accessories/thermostat.js';
 import type { PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../../platform.js';
 import { objectsEqualShallow } from '../../utils/utils.js';
+import { FritzAccessory } from '../smarthome.js';
 
 type ThermostatState = {
     name: string;
@@ -14,7 +14,7 @@ type ThermostatState = {
     batteryLevel: number;
 }
 
-export class Thermostat implements Device {
+export class Thermostat implements FritzAccessory {
     private previousTemperature: number = 19;
 
     constructor(

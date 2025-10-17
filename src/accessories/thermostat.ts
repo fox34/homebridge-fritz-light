@@ -1,7 +1,7 @@
 import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../platform.js';
 import { Thermostat as FritzThermostat } from '../fritzbox/accessories/thermostat.js';
-import { HomebridgeAccessory } from 'homebridge-lib';
+import { HomebridgeAccessory } from 'fritz-redux';
 
 export class Thermostat implements HomebridgeAccessory {
     constructor(platform: FritzRedux, accessory: PlatformAccessory, device: FritzThermostat) {

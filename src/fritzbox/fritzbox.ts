@@ -1,35 +1,25 @@
-import type { IDevice } from './device.js';
-import { Service } from './service.js';
-import { DeviceConfig } from './services/deviceconfig.js';
-import { DeviceInfo } from './services/deviceinfo.js';
-import { SmartHome } from './services/smarthome.js';
-import type { ITr64Desc } from './tr64desc.js';
-import { Tr64Desc } from './tr64desc.js';
-import { XMLClient } from './xml.client.js';
-
-interface IOptions {
-    host: string;
-    port: number;
-    username?: string;
-    password?: string;
-}
+import type { FritzBoxConnectionOptions } from 'fritz-redux';
+import type { Device, TR64Desc } from 'fritz-tr64';
+import { Service, TR64 } from './tr64.js';
+import { DeviceInfo } from './deviceinfo.js';
+import { SmartHome } from './smarthome.js';
+import { XMLClient } from './XMLClient.js';
 
 class FritzBox {
     public deviceInfo = new DeviceInfo(this);
     public smartHome = new SmartHome(this);
-    public deviceConfig = new DeviceConfig(this);
 
     private initialized = false;
     public readonly url: URL;
-    private readonly options: IOptions;
+    private readonly options: FritzBoxConnectionOptions;
 
     public services = new Map<string, Service>();
 
-    private readonly xmlClient: XMLClient;
+    public readonly xmlClient: XMLClient;
     private sid?: string;
     private lastSidGeneration: Date | null = null;
 
-    constructor(options?: Partial<IOptions>) {
+    constructor(options?: Partial<FritzBoxConnectionOptions>) {
         this.options = {
             host: 'fritz.box',
             port: 49000,
@@ -43,9 +33,24 @@ class FritzBox {
         if (this.initialized) {
             return;
         }
-        await this.parseDesc('/tr64desc.xml');
 
-        // TLS is required for some (which?) smart home actions
+        // Parse TR64 description file
+        const requestUrl = new URL('/tr64desc.xml', this.url.toString()).toString();
+        const result = await this.xmlClient.requestXML<{ root: TR64Desc }>(
+            requestUrl,
+        );
+        const tr64desc = new TR64(result.root);
+        this.initServicesByDevice(tr64desc.device);
+
+        /**
+         * TLS is required for some (which?) actions:
+         *
+         * 4.2.1 Remark
+         * In the [TR064] specification, SSL encryption is recommended only for some SOAP
+         * actions. The support for access over an encrypted HTTPS link is not specified in details.
+         * Therefore AVM decided to use the explained action GetSecurityPort
+         * @link https://fritz.support/resources/TR-064_First_Steps.pdf
+         */
         const port = (await this.deviceInfo.getSecurityPort()).NewSecurityPort;
         this.url.protocol = 'https:';
         this.url.port = port;
@@ -53,18 +58,7 @@ class FritzBox {
         this.initialized = true;
     }
 
-    private async parseDesc(url: string): Promise<void> {
-        const requestUrl = new URL(url, this.url.toString()).toString();
-        const result = await this.xmlClient.requestXML<{ root: ITr64Desc }>(
-            requestUrl,
-        );
-        if (result) {
-            const tr64desc = new Tr64Desc(result.root);
-            this.initServicesByDevice(tr64desc.device);
-        }
-    }
-
-    private initServicesByDevice(device: IDevice): void {
+    private initServicesByDevice(device: Device): void {
         if (device.serviceList && !Array.isArray(device.serviceList.service)) {
             device.serviceList.service = [device.serviceList.service];
         }
@@ -92,7 +86,7 @@ class FritzBox {
                 return this.sid;
             }
         }
-        const response = await this.deviceConfig.getUrlSID();
+        const response = await this.deviceInfo.getUrlSID();
         const sid: string = response['NewX_AVM-DE_UrlSID']?.split('sid=')?.[1];
         if (!sid) {
             throw new Error('No SID found');
@@ -109,4 +103,4 @@ class FritzBox {
     }
 }
 
-export { FritzBox, IOptions };
+export { FritzBox, FritzBoxConnectionOptions };

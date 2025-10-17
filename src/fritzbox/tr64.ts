@@ -1,82 +1,45 @@
+import type { FritzBoxConnectionOptions } from 'fritz-redux';
+import type { ArgumentElement, ArgumentList, Action, SCPD } from 'fritz-scpd';
+import type { DeviceService, SystemVersion, SpecVersion, TR64Desc, RootDevice } from 'fritz-tr64';
 import xmlBuilder from 'xmlbuilder';
-import type { IOptions } from './fritzbox.js';
-import { XMLClient } from './xml.client.js';
+import { XMLClient } from './XMLClient.js';
 
-export interface IService {
-    serviceType: string;
-    serviceId: string;
-    controlURL: string;
-    eventSubURL: string;
-    SCPDURL: string;
-}
-
-interface Scpd {
+export class TR64 implements TR64Desc {
     specVersion: SpecVersion;
-    actionList: ActionList;
-    serviceStateTable: ServiceStateTable;
+    systemVersion: SystemVersion;
+    device: RootDevice;
     _xmlns: string;
+
+    constructor(tr64desc: TR64Desc) {
+        this._xmlns = tr64desc._xmlns;
+        this.device = tr64desc.device;
+        this.specVersion = tr64desc.specVersion;
+        this.systemVersion = tr64desc.systemVersion;
+    }
 }
 
-interface ActionList {
-    action: IAction[];
-}
-
-interface IAction {
-    name: string;
-    argumentList: ArgumentList;
-}
-
-interface ArgumentList {
-    argument: ArgumentElement[] | ArgumentElement;
-}
-
-interface ArgumentElement {
-    name: string;
-    direction: Direction;
-    relatedStateVariable: string;
-}
-
-enum Direction {
-    In = 'in',
-    Out = 'out',
-}
-
-interface ServiceStateTable {
-    stateVariable: StateVariable[];
-}
-
-interface StateVariable {
-    name: string;
-    dataType: DataType;
-    defaultValue?: string;
-    _sendEvents: SendEvents;
-}
-
-enum SendEvents {
-    No = 'no',
-}
-
-enum DataType {
-    String = 'string',
-    Ui2 = 'ui2',
-    Ui4 = 'ui4',
-}
-
-interface SpecVersion {
-    major: string;
-    minor: string;
-}
-
-export class Service implements IService {
+export class Service implements DeviceService {
     public serviceType: string;
     public serviceId: string;
     public controlURL: string;
     public eventSubURL: string;
     public SCPDURL: string;
 
-    private initialized = false;
-    private url;
-    private fritzboxOptions;
+    private initialized: boolean = false;
+    private url: URL;
+    private fritzboxOptions: FritzBoxConnectionOptions;
+    private xmlClient: XMLClient;
+
+    constructor(service: DeviceService, url: URL, options: FritzBoxConnectionOptions) {
+        this.serviceType = service.serviceType;
+        this.serviceId = service.serviceId;
+        this.controlURL = service.controlURL;
+        this.eventSubURL = service.eventSubURL;
+        this.SCPDURL = service.SCPDURL;
+        this.url = url;
+        this.fritzboxOptions = options;
+        this.xmlClient = new XMLClient();
+    }
 
     private customActions = new Map<
         string,
@@ -87,30 +50,20 @@ export class Service implements IService {
         }
     >();
 
-    constructor(service: IService, url: URL, options: IOptions) {
-        this.serviceType = service.serviceType;
-        this.serviceId = service.serviceId;
-        this.controlURL = service.controlURL;
-        this.eventSubURL = service.eventSubURL;
-        this.SCPDURL = service.SCPDURL;
-        this.url = url;
-        this.fritzboxOptions = options;
-    }
-
     async init() {
         if (this.initialized) {
             return;
         }
         const url = this.url.origin + this.SCPDURL;
 
-        const result = await new XMLClient().requestXML<{ scpd: Scpd }>(url);
+        const result = await this.xmlClient.requestXML<{ scpd: SCPD }>(url);
         if (result?.scpd) {
             this.initActions(result.scpd.actionList.action);
         }
         this.initialized = true;
     }
 
-    initActions(actions: IAction[]) {
+    initActions(actions: Action[]) {
         actions.forEach(action => {
             const customAction = {
                 name: action.name,
@@ -142,7 +95,6 @@ export class Service implements IService {
             SoapAction: this.serviceType + '#' + actionName,
             'Content-Type': 'text/xml; charset="utf-8"',
         };
-        const xmlClient = new XMLClient();
         const auth =
             this.fritzboxOptions.username && this.fritzboxOptions.password
                 ? {
@@ -150,7 +102,7 @@ export class Service implements IService {
                     password: this.fritzboxOptions.password,
                 }
                 : undefined;
-        const response = await xmlClient.requestXML<{
+        const response = await this.xmlClient.requestXML<{
             ['s:Envelope']: {
                 ['s:Body']: {
                     [key: string]: {

@@ -1,7 +1,7 @@
 import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
 import type { FritzRedux } from '../platform.js';
 import { Template as FritzTemplate } from '../fritzbox/accessories/template.js';
-import { HomebridgeAccessory } from 'homebridge-lib';
+import { HomebridgeAccessory } from 'fritz-redux';
 import { sleep } from '../utils/utils.js';
 
 export class Template implements HomebridgeAccessory {
