@@ -64,11 +64,11 @@ Example configuration:
   "platforms": [
     {
       "name": "FRITZ! Light",
-      "host": "10.9.4.1",
+      "host": "fritz.box",
       "username": "homebridge",
       "password": "_example_password_change_me_",
       "exposeTemplates": true,
-      "templatePrefix": "Vorlage:",
+      "templatePrefix": "Template:",
       "platform": "FritzLight"
     }
   ]
