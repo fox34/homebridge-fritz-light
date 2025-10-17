@@ -55,7 +55,8 @@ class FritzBox {
          * Therefore AVM decided to use the explained action GetSecurityPort
          * @link https://fritz.support/resources/TR-064_First_Steps.pdf
          */
-        this.url.port = (await this.getSecurityPort()).toString();
+        const securityPort: SecurityPort = await this.exec<SecurityPort>(this.serviceIdDeviceInfo, 'GetSecurityPort');
+        this.url.port = securityPort.NewSecurityPort.toString();
         this.url.protocol = 'https:';
 
         this.initialized = true;
