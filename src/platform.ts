@@ -89,8 +89,10 @@ export class FritzRedux implements DynamicPlatformPlugin {
         }
 
         // Periodically update device info: every minute
-        setInterval(async () => {
-            await this.fritzbox.smartHome.getDevices(this.config);
-        }, 60 * 1000);
+        setInterval(async () => await this.refreshState(), 60 * 1000);
+    }
+
+    async refreshState() {
+        await this.fritzbox.smartHome.getDevices(this.config);
     }
 }

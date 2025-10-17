@@ -28,6 +28,7 @@ export class Template implements HomebridgeAccessory {
                 await device.activate();
                 await sleep(1000);
                 service.setCharacteristic(platform.Characteristic.On, 0);
+                await platform.refreshState();
             })
             .updateValue(0)
         ;
