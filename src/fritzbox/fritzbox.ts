@@ -1,23 +1,27 @@
 import type { FritzBoxConnectionOptions } from 'fritz-redux';
+import type { DeviceInfo as SCPDDeviceInfo, SecurityPort, UrlSID } from 'fritz-scpd';
 import type { Device, TR64Desc } from 'fritz-tr64';
 import { Service, TR64 } from './tr64.js';
-import { DeviceInfo } from './deviceinfo.js';
 import { SmartHome } from './smarthome.js';
 import { XMLClient } from './XMLClient.js';
 
 class FritzBox {
-    public deviceInfo = new DeviceInfo(this);
-    public smartHome = new SmartHome(this);
+    /**
+     * @link https://fritz.support/resources/TR-064_Device_Info.pdf
+     * @link https://fritz.support/resources/TR-064_Device_Config.pdf
+     */
+    private readonly serviceIdDeviceInfo = 'urn:DeviceInfo-com:serviceId:DeviceInfo1';
+    private readonly serviceIdDeviceConfig = 'urn:DeviceConfig-com:serviceId:DeviceConfig1';
 
-    private initialized = false;
+    private initialized: boolean = false;
     public readonly url: URL;
     private readonly options: FritzBoxConnectionOptions;
-
-    public services = new Map<string, Service>();
-
-    public readonly xmlClient: XMLClient;
     private sid?: string;
     private lastSidGeneration: Date | null = null;
+
+    public services: Map<string, Service> = new Map<string, Service>();
+    public smartHome: SmartHome = new SmartHome(this);
+    public readonly xmlClient: XMLClient;
 
     constructor(options?: Partial<FritzBoxConnectionOptions>) {
         this.options = {
@@ -51,9 +55,8 @@ class FritzBox {
          * Therefore AVM decided to use the explained action GetSecurityPort
          * @link https://fritz.support/resources/TR-064_First_Steps.pdf
          */
-        const port = (await this.deviceInfo.getSecurityPort()).NewSecurityPort;
+        this.url.port = (await this.getSecurityPort()).toString();
         this.url.protocol = 'https:';
-        this.url.port = port;
 
         this.initialized = true;
     }
@@ -77,7 +80,33 @@ class FritzBox {
         }
     }
 
+    /**
+     * Query TR-064 service interface
+     */
+    private async exec<T>(serviceId: string, actionName: string, options?: unknown): Promise<T> {
+        if (!this.services.has(serviceId)) {
+            throw new Error(`service with id ${serviceId} not known`);
+        }
+        return await (<Service>this.services.get(serviceId)).exec(actionName, options);
+    }
+
+    private async getSecurityPort(): Promise<number> {
+        await this.init();
+        const securityPort: SecurityPort = await this.exec<SecurityPort>(this.serviceIdDeviceInfo, 'GetSecurityPort');
+        return securityPort.NewSecurityPort;
+    }
+
+    public async getDeviceInfo(): Promise<SCPDDeviceInfo> {
+        await this.init();
+        return this.exec<SCPDDeviceInfo>(this.serviceIdDeviceInfo, 'GetInfo');
+    }
+
+    /**
+     * Refresh and get access token (SID)
+     */
     public async getSid(): Promise<string> {
+        await this.init();
+
         if (this.lastSidGeneration && this.sid) {
             const now = new Date();
             const diff = now.getTime() - this.lastSidGeneration.getTime();
@@ -86,13 +115,15 @@ class FritzBox {
                 return this.sid;
             }
         }
-        const response = await this.deviceInfo.getUrlSID();
+
+        const response: UrlSID = await this.exec<UrlSID>(this.serviceIdDeviceConfig, 'X_AVM-DE_CreateUrlSID');
         const sid: string = response['NewX_AVM-DE_UrlSID']?.split('sid=')?.[1];
+
         if (!sid) {
             throw new Error('No SID found');
         }
+
         this.sid = sid;
-        //console.debug({ sid }, 'SID generated');
         this.lastSidGeneration = new Date();
         return sid;
     }

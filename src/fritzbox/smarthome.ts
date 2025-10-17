@@ -51,6 +51,9 @@ export class SmartHome {
      */
     constructor(private fritzbox: FritzBox) {}
 
+    /**
+     * Get list of currently registered devices, update existing instances
+     */
     public async getDevices(config: PlatformConfig): Promise<(FritzAccessory & (Template | Thermostat))[]> {
         await this.fritzbox.init();
         const sid = await this.fritzbox.getSid();

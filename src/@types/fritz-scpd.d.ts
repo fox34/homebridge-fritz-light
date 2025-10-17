@@ -45,4 +45,28 @@ declare module 'fritz-scpd' {
     interface AllowedValue {
         allowedValue: string;
     }
+
+    // DeviceInfo
+    export interface DeviceInfo {
+        NewManufacturerName: string;
+        NewManufacturerOUI: string;
+        NewModelName: string;
+        NewDescription: string;
+        NewProductClass: string;
+        NewSerialNumber: string;
+        NewSoftwareVersion: string;
+        NewHardwareVersion: string;
+        NewSpecVersion: string;
+        NewProvisioningCode: string;
+        NewUpTime: number;
+        NewDeviceLog: string;
+    }
+
+    export interface SecurityPort {
+        NewSecurityPort: number;
+    }
+
+    export interface UrlSID {
+        'NewX_AVM-DE_UrlSID': string;
+    }
 }
