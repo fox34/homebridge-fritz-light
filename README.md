@@ -92,20 +92,19 @@ All communication happens **locally** within your home network; no data is trans
 
 ## Limitations and Future Development
 
-This plugin currently supports only thermostats and a template recall functionality.
+This plugin currently supports only outlets, thermostats and a template recall functionality.
 As I no longer own other FRITZ! SmartHome devices, I am **not planning further feature development**.
 
 However, contributions are very welcome!
-If you wish to extend support for additional FRITZ! devices (e.g., plugs, switches, sensors), please fork the repository and open a pull request.
+If you wish to extend support for additional FRITZ! devices (e.g., switches, sensors), please fork the repository and open a pull request.
 
 Some examples of possible devices and features are:
 
-| Device                                    | Supported actions                                                                            |
+| Device                                    | Possibly supported actions                                                                   |
 |-------------------------------------------|----------------------------------------------------------------------------------------------|
-| **FRITZ!Box**, FRITZ!Repeater             | - Toggle guest WLAN                                                                          |
-| **Buttons**<br>(e.g. FRITZ!DECT 400, 440) | - Temperature and humidity reporting<br>- *Note*: Button presses cannot be detected reliably |
-| **Lights**<br>(e.g. FRITZ!DECT 500)       | - Power toggle<br>- Change brightness / color<br>- Support for adaptive lighting             |
+| **Lights**<br>(e.g. FRITZ!DECT 500)       | - Power toggle<br>- Change brightness / color<br>- Adaptive lighting                         |
 | **Sensors**<br>(e.g. FRITZ!DECT 350)      | - Window state reporting                                                                     |
+| **Buttons**<br>(e.g. FRITZ!DECT 400, 440) | - Temperature and humidity reporting<br>- *Note*: Button presses cannot be detected reliably |
 
 ---
 
