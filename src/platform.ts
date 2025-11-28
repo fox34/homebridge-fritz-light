@@ -28,7 +28,14 @@ export class FritzLight implements DynamicPlatformPlugin {
         });
 
         this.log.debug('Finished initializing:', this.config.name);
-        this.api.on('didFinishLaunching', async () => await this.discoverDevices());
+        this.api.on('didFinishLaunching', async () => {
+
+            // Discover new or removed devices
+            await this.discoverDevices();
+
+            // Periodically update device state: every minute
+            setInterval(async () => await this.refreshState(), 60 * 1000);
+        });
     }
 
     /**
@@ -88,8 +95,8 @@ export class FritzLight implements DynamicPlatformPlugin {
             }
         }
 
-        // Periodically update device info: every minute
-        setInterval(async () => await this.refreshState(), 60 * 1000);
+        // Periodically discover new or removed devices: every 10 minutes
+        setTimeout(async() => await this.discoverDevices(), 10 * 60 * 1000);
     }
 
     async refreshState() {
