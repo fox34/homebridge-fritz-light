@@ -47,3 +47,4 @@ jspm_packages/
 
 # Test configuration
 /test/hbConfig
+/src/discoverDevices.ts

@@ -2,7 +2,7 @@
   "name": "homebridge-fritz-light",
   "displayName": "Homebridge FRITZ! Light",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Homebridge integration for the FRITZ! ecosystem",
   "author": "fox34",
   "license": "Apache-2.0",

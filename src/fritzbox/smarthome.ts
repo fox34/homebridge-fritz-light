@@ -3,12 +3,14 @@ import { HomebridgeAccessory } from 'fritz-light';
 import type { FritzBox } from './fritzbox.js';
 import { XMLClient } from './XMLClient.js';
 import { Template } from './accessories/template.js';
+import { Switch } from './accessories/switch.js';
 import { Thermostat } from './accessories/thermostat.js';
 import { PlatformAccessory, PlatformConfig } from 'homebridge';
 import { FritzLight } from '../platform.js';
 
 // Supported accessory types
 enum AccessoryType {
+    Switch = 'switch',
     Thermostat = 'thermostat', // "hkr" = "Heizkörperregler"
 }
 
@@ -44,7 +46,7 @@ export interface FritzAccessory {
 }
 
 export class SmartHome {
-    private devices: Map<string, FritzAccessory & (Template | Thermostat)> = new Map();
+    private devices: Map<string, FritzAccessory & (Switch | Template | Thermostat)> = new Map();
 
     /**
      * @link https://fritz.support/resources/AHA-HTTP-Interface.pdf
@@ -54,7 +56,7 @@ export class SmartHome {
     /**
      * Get list of currently registered devices, update existing instances
      */
-    public async getDevices(config: PlatformConfig): Promise<(FritzAccessory & (Template | Thermostat))[]> {
+    public async getDevices(config: PlatformConfig): Promise<(FritzAccessory & (Switch | Template | Thermostat))[]> {
         await this.fritzbox.init();
         const sid = await this.fritzbox.getSid();
 
@@ -92,10 +94,16 @@ export class SmartHome {
         ];
     }
 
-    private getDeviceFromApi(device: AHADevice): FritzAccessory & Thermostat {
+    private getDeviceFromApi(device: AHADevice): FritzAccessory & (Switch | Thermostat) {
         // Nothing else implemented yet
-        //switch (this.getDeviceType(device)) { ... }
-        return this.getThermostat(device);
+        switch (this.getDeviceType(device)) {
+        case AccessoryType.Switch:
+            return this.getSwitch(device);
+        case AccessoryType.Thermostat:
+            return this.getThermostat(device);
+        }
+        
+        throw new Error(`Unknown device type: ${this.getDeviceType(device)}`);
     }
 
     private getTemplate(apiTemplate: AHATemplate): Template {
@@ -111,6 +119,33 @@ export class SmartHome {
             this.devices.set(template.ain, template);
         }
         return template;
+    }
+    
+    private getSwitch(device: AHADevice): Switch {
+        const state = {
+            name: device.name,
+            firmwareVersion: device['@_fwversion'],
+            on: <boolean>(device.switch?.state || device.simpleonoff?.state || false),
+            currentTemperature: device.temperature ? device.temperature.celsius / 10 : undefined,
+        };
+
+        let switchDevice: Switch;
+        if (this.devices.has(device['@_identifier'])) {
+            // Update device state
+            switchDevice = <Switch>this.devices.get(device['@_identifier']);
+            switchDevice.state = state;
+
+        } else {
+            switchDevice = new Switch(
+                this.fritzbox,
+                device['@_identifier'],
+                device['@_manufacturer'],
+                device['@_productname'],
+                state,
+            );
+            this.devices.set(switchDevice.ain, switchDevice);
+        }
+        return switchDevice;
     }
 
     private getThermostat(device: AHADevice): Thermostat {
@@ -150,6 +185,13 @@ export class SmartHome {
     private getDeviceType(device: AHADevice): AccessoryType | undefined {
         if ((device['@_functionbitmask'] & AHAFunctionBitmask.Hkr) > 0 && device.hkr) {
             return AccessoryType.Thermostat;
+        }
+
+        if (
+            ((device['@_functionbitmask'] & AHAFunctionBitmask.Outlet) > 0 && device.switch) ||
+            ((device['@_functionbitmask'] & AHAFunctionBitmask.OnOff) > 0 && device.simpleonoff)
+        ) {
+            return AccessoryType.Switch;
         }
 
         // Not implemented
