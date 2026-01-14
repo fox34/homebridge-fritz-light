@@ -2,34 +2,32 @@
   <img src="images/logo.png" height="175" alt="Homebridge FRITZ! Logo">
 </p>
 
+# THIS PROJECT IS ARCHIVED
+
+No further development will take place, since I do not own any FRITZ! Smart Devices anymore.
+Feel free to use it as a base for your own fork.
+
 # homebridge-fritz-light
-
-[![GitHub last commit](https://img.shields.io/github/last-commit/fox34/homebridge-fritz-light.svg?style=flat-square)](https://github.com/fox34/homebridge-fritz-light)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square&maxAge=2592000)](https://paypal.me/stefanovanmansiere)
-
----
 
 ## Motivation
 
 Development of the popular [`homebridge-fritz-platform`](https://github.com/seydx/homebridge-fritz-platform) has stalled.  
-The main goal of this project is to **maintain compatibility** with modern Homebridge and FRITZ!Box firmware versions, allowing users to control key smart home functions from within HomeKit.
+The main goal of this project was to **maintain compatibility** with modern Homebridge and FRITZ!Box firmware versions, allowing users to control key smart home functions from within HomeKit.
 
-This plugin currently focuses on **stability and simplicity** rather than feature completeness. It provides the essential functionality needed for daily use, but it is **currently no full replacement** for the original plugin or a competitor to more comprehensive solutions such as Home Assistant integrations.
+This plugin focuses on **stability and simplicity** rather than feature completeness. It provides the essential functionality needed for daily use, but it is **no full replacement** for the original plugin or a competitor to more comprehensive solutions such as Home Assistant integrations.
 
 ---
 
 ## Scope
 
-Currently, this plugin supports the following devices and actions within the **FRITZ!** ecosystem:
+This plugin supports the following devices and actions within the **FRITZ!** ecosystem:
 
 | Device                                     | Supported actions                                                                               |
 |--------------------------------------------|-------------------------------------------------------------------------------------------------|
 | **Thermostats**<br>(e.g. FRITZ!DECT 301)   | - Temperature reporting<br>- Change target temperature<br>- Recall templates  |
 | **Outlets**<br>(e.g. FRITZ!DECT 200 / 210) | - Power toggle<br>- Temperature reporting                                                    |
 
-> Other FRITZ! SmartHome devices (e.g. window sensors or lights) are not yet supported.  
-> Contributions are welcome if you wish to extend functionality.
-> See below for further information.
+Other FRITZ! SmartHome devices (e.g. window sensors or lights) are not supported.  
 
 ---
 
@@ -92,11 +90,10 @@ All communication happens **locally** within your home network; no data is trans
 
 ## Limitations and Future Development
 
-This plugin currently supports only outlets, thermostats and a template recall functionality.
-As I no longer own other FRITZ! SmartHome devices, I am **not planning further feature development**.
+This plugin supports only outlets, thermostats and a template recall functionality.
+As I no longer own any FRITZ! SmartHome devices, I am **not planning further development**.
 
-However, contributions are very welcome!
-If you wish to extend support for additional FRITZ! devices (e.g., switches, sensors), please fork the repository and open a pull request.
+If you wish to extend support for additional FRITZ! devices (e.g., switches, sensors), please create an own fork of the repository.
 
 Some examples of possible devices and features are:
 
